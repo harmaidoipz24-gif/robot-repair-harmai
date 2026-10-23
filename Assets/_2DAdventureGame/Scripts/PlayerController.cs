@@ -11,6 +11,10 @@ public class PlayerController : MonoBehaviour
     public float timeInvincible = 2.0f;
     bool isInvincible;
     float damageCooldown;
+    public GameObject projectilePrefab;
+    public InputAction launchAction;
+    Vector2 lookDirection = new Vector2(1, 0);
+    Animator animator;
 
     Rigidbody2D rigidbody2d;
     Vector2 move;
@@ -20,6 +24,8 @@ public class PlayerController : MonoBehaviour
         MoveAction.Enable();
         rigidbody2d = GetComponent<Rigidbody2D>();
         currentHealth = maxHealth;
+        launchAction.Enable();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -34,6 +40,17 @@ public class PlayerController : MonoBehaviour
             {
                 isInvincible = false;
             }
+        }
+   
+        if (!Mathf.Approximately(move.x, 0.0f) || !Mathf.Approximately(move.y, 0.0f))
+        {
+            lookDirection.Set(move.x, move.y);
+            lookDirection.Normalize();
+        }
+
+        if (launchAction.WasPressedThisFrame())
+        {
+            Launch();
         }
     }
 
@@ -56,5 +73,16 @@ public class PlayerController : MonoBehaviour
         }
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         Debug.Log(currentHealth + "/" + maxHealth);
+    }
+    void Launch()
+    {
+        GameObject projectileObject = Instantiate(projectilePrefab, rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
+        Projectile projectile = projectileObject.GetComponent<Projectile>();
+
+        // Вказуємо напрямок пострілу (використовуємо поточний напрямок погляду lookDirection)
+        projectile.Launch(lookDirection, 300);
+
+        // Тригер анімації кидка
+        animator.SetTrigger("Launch");
     }
 }

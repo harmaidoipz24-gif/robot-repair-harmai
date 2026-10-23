@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 8136258912943865361}
   - component: {fileID: 1277175736541341322}
   - component: {fileID: 2206591409313032368}
-  m_Layer: 0
+  - component: {fileID: 6896299051891413891}
+  m_Layer: 6
   m_Name: PlayerCharacter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,3 +232,46 @@ MonoBehaviour:
     m_Priority: 0
   maxHealth: 5
   speed: 3
+  timeInvincible: 2
+  projectilePrefab: {fileID: 1029409349457784368, guid: fe59c6fb427f4db499245191578c4a91,
+    type: 3}
+  launchAction:
+    m_Name: Launch
+    m_Type: 1
+    m_ExpectedControlType: Button
+    m_Id: d832de2b-bef1-4ba4-9e54-de1687cbcbfd
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: dbdb0a90-7b87-4fdf-9532-74767dcfe5f9
+      m_Path: <Keyboard>/c
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Launch
+      m_Flags: 0
+    m_Flags: 0
+    m_Priority: 0
+--- !u!95 &6896299051891413891
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2245948663664412104}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
