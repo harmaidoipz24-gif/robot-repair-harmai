@@ -2,27 +2,27 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public float speed = 1.0f;
+    public float speed = 3.0f;
     public bool vertical;
     public float changeTime = 3.0f;
 
-    Rigidbody2D rigidbody2d;
-    Animator animator;
+    private Rigidbody2D rigidbody2d;
+    private float timer;
+    private int direction = 1;
+    private bool broken = true;
 
-    float timer;
-    int direction = 1;
-    bool broken = true;
-
-    void Start()
+    private void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
         timer = changeTime;
     }
 
-    void Update()
+    private void Update()
     {
+        if (!broken) return;
+
         timer -= Time.deltaTime;
+
         if (timer < 0)
         {
             direction = -direction;
@@ -30,35 +30,25 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if (!broken)
-        {
-            return;
-        }
+        if (!broken) return;
 
         Vector2 position = rigidbody2d.position;
 
-        animator.SetFloat("Move X", direction); // або ваші значення напрямку
-        animator.SetFloat("Move Y", 0);
-
         if (vertical)
         {
-            position.y = position.y + speed * direction * Time.deltaTime;
-            animator.SetFloat("Move X", 0);
-            animator.SetFloat("Move Y", direction);
+            position.y = position.y + Time.fixedDeltaTime * speed * direction;
         }
         else
         {
-            position.x = position.x + speed * direction * Time.deltaTime;
-            animator.SetFloat("Move X", direction);
-            animator.SetFloat("Move Y", 0);
+            position.x = position.x + Time.fixedDeltaTime * speed * direction;
         }
 
         rigidbody2d.MovePosition(position);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         PlayerController player = other.gameObject.GetComponent<PlayerController>();
 
@@ -71,12 +61,16 @@ public class EnemyController : MonoBehaviour
     public void Fix()
     {
         broken = false;
-        rigidbody2d.simulated = false;
-        animator.SetTrigger("Fixed");
+        if (rigidbody2d != null)
+        {
+            rigidbody2d.simulated = false;
+        }
+
         Debug.Log("--- МЕТОД FIX ВИКЛИКАНО! ---");
-        broken = false;
-        rigidbody2d.simulated = false;
-        animator.SetTrigger("Fixed");
+
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.RobotFixed();
+        }
     }
-   
 }

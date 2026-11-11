@@ -1,0 +1,18 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="WinScreenContainer" style="flex-grow: 1; position: absolute; -unity-background-image-tint-color: rgba(0, 100, 0, 0.314); align-items: center; justify-content: center; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 100, 0, 0.314); display: none;">
+        <ui:Label text="YOU WIN! Press R to Restart" style="font-size: 28px; color: rgb(255, 255, 255); white-space: normal; align-items: center; display: flex; visibility: visible;"/>
+    </ui:VisualElement>
+    <ui:Label text="Fixed: 0 / 1" name="CounterLabel" style="position: absolute; top: 20px; right: 20px; font-size: 20px; color: rgb(251, 255, 8);"/>
+    <ui:VisualElement name="NPCDialogue" style="flex-grow: 1; position: absolute; top: 50px; left: 10px; width: 340px; height: 100px; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/Ducko/UI/UIDialogueBox.png?fileID=2800000&amp;guid=924827a9385ec3544b572966c8853b0a&amp;type=3#UIDialogueBox&quot;);">
+        <ui:Label text="Привіт! Допоможи відремонтувати робота!" style="white-space: pre-wrap; left: 20px; top: 20px;"/>
+    </ui:VisualElement>
+    <ui:VisualElement name="HealthBarBackground" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/Ducko/UI/UIHealthFrame.png?fileID=2800000&amp;guid=b47cdbd2062c5e64ba5a0bf3f6b045b1&amp;type=3#UIHealthFrame&quot;); width: 178px; height: 52px; flex-shrink: 1; -unity-background-scale-mode: scale-to-fit;">
+        <ui:VisualElement name="HealthBarContainer" style="flex-grow: 1; position: absolute; width: 77px; height: 20px; top: 15px; left: 64px;">
+            <ui:VisualElement name="HealthBar" style="flex-grow: 1; -unity-background-scale-mode: stretch-to-fill; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/Ducko/UI/UIHealthBar.png?fileID=21300000&amp;guid=39fe000f2b6d9d04b93d6a76310e29aa&amp;type=3#UIHealthBar&quot;); width: 100%; height: 100%; align-items: auto; position: relative;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="CharacterPortrait" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/Ducko/UI/CharacterPortrait.png?fileID=21300000&amp;guid=0332b35b8fe3cf8458eb0558889493d1&amp;type=3#CharacterPortrait&quot;); -unity-background-scale-mode: scale-to-fit; position: absolute; -unity-slice-type: sliced; width: auto; height: auto; top: 7px; right: 105px; left: 41px; bottom: 6px;"/>
+    </ui:VisualElement>
+    <ui:VisualElement name="LoseScreenContainer" style="flex-grow: 1; position: absolute; -unity-background-image-tint-color: rgba(0, 100, 0, 0.314); align-items: center; justify-content: center; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(100, 0, 5, 0.314); display: none;">
+        <ui:Label text="GAME OVER! Press R to Restart" style="font-size: 28px; color: rgb(255, 255, 255); white-space: normal; align-items: center; display: flex; visibility: visible;"/>
+    </ui:VisualElement>
+</ui:UXML>

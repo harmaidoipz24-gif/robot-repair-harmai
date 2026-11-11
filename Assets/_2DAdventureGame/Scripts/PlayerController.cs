@@ -1,88 +1,89 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public InputAction MoveAction;
+    public float speed = 5.0f;
     public int maxHealth = 5;
-    public int health { get { return currentHealth; } }
-    int currentHealth;
-    public float speed = 3.0f;
-    public float timeInvincible = 2.0f;
-    bool isInvincible;
-    float damageCooldown;
     public GameObject projectilePrefab;
-    public InputAction launchAction;
-    Vector2 lookDirection = new Vector2(1, 0);
-    Animator animator;
 
-    Rigidbody2D rigidbody2d;
-    Vector2 move;
+    // Властивість читання HP для HealthCollectible
+    public int health { get { return currentHealth; } }
 
-    void Start()
+    private Rigidbody2D rigidbody2d;
+    private Vector2 move;
+    private Vector2 lookDirection = new Vector2(1, 0);
+    private int currentHealth;
+
+    private void Start()
     {
-        MoveAction.Enable();
         rigidbody2d = GetComponent<Rigidbody2D>();
         currentHealth = maxHealth;
-        launchAction.Enable();
-        animator = GetComponent<Animator>();
     }
 
-    void Update()
+    private void Update()
     {
-        move = MoveAction.ReadValue<Vector2>();
-       // Debug.Log(move);
+        move.x = Input.GetAxis("Horizontal");
+        move.y = Input.GetAxis("Vertical");
 
-        if (isInvincible)
-        {
-            damageCooldown -= Time.deltaTime;
-            if (damageCooldown < 0)
-            {
-                isInvincible = false;
-            }
-        }
-   
         if (!Mathf.Approximately(move.x, 0.0f) || !Mathf.Approximately(move.y, 0.0f))
         {
             lookDirection.Set(move.x, move.y);
             lookDirection.Normalize();
         }
 
-        if (launchAction.WasPressedThisFrame())
+        if (Input.GetKeyDown(KeyCode.C))
         {
             Launch();
         }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("NPC"));
+            if (hit.collider != null)
+            {
+                NonPlayerCharacter character = hit.collider.GetComponent<NonPlayerCharacter>();
+                if (character != null)
+                {
+                    character.DisplayDialog();
+                }
+            }
+        }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        Vector2 position = (Vector2)rigidbody2d.position + move * speed * Time.deltaTime;
+        Vector2 position = rigidbody2d.position;
+        position += move * speed * Time.fixedDeltaTime;
         rigidbody2d.MovePosition(position);
     }
 
     public void ChangeHealth(int amount)
     {
-        if (amount < 0)
-        {
-            if (isInvincible)
-            {
-                return;
-            }
-            isInvincible = true;
-            damageCooldown = timeInvincible;
-        }
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        Debug.Log(currentHealth + "/" + maxHealth);
+
+        if (UIHandler.instance != null)
+        {
+            UIHandler.instance.SetHealthValue(currentHealth / (float)maxHealth);
+        }
+
+        if (currentHealth <= 0)
+        {
+            if (GameManager.instance != null)
+            {
+                GameManager.instance.GameOver();
+            }
+        }
     }
-    void Launch()
+
+    private void Launch()
     {
+        if (projectilePrefab == null) return;
+
         GameObject projectileObject = Instantiate(projectilePrefab, rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
         Projectile projectile = projectileObject.GetComponent<Projectile>();
-
-        // Вказуємо напрямок пострілу (використовуємо поточний напрямок погляду lookDirection)
-        projectile.Launch(lookDirection, 300);
-
-        // Тригер анімації кидка
-        animator.SetTrigger("Launch");
+        if (projectile != null)
+        {
+            projectile.Launch(lookDirection, 300);
+        }
     }
 }
