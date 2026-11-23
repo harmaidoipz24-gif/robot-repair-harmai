@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -7,9 +8,19 @@ public class PlayerController : MonoBehaviour
     public float timeInvincible = 1.5f;
     public GameObject projectilePrefab;
 
+    [Header("Зворотний зв'язок (Полішинг)")]
+    public AudioClip hitSound;
+    public AudioClip healSound;
+    public AudioClip throwSound;
+    public Color damageFlashColor = new Color(1f, 0.35f, 0.35f, 1f);
+    public Color healFlashColor = new Color(0.4f, 1f, 0.4f, 1f);
+    public float flashDuration = 0.15f;
+
     public int health { get { return currentHealth; } }
 
     private Rigidbody2D rigidbody2d;
+    private SpriteRenderer spriteRenderer;
+    private AudioSource audioSource;
     private Vector2 move;
     private Vector2 lookDirection = new Vector2(1, 0);
     private int currentHealth;
@@ -19,6 +30,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
         currentHealth = maxHealth;
     }
 
@@ -72,9 +85,17 @@ public class PlayerController : MonoBehaviour
     {
         if (amount < 0)
         {
-            if (isInvincible) return;
+            if (isInvincible) return; // Захист: один звук і один удар на подію
             isInvincible = true;
             damageCooldown = timeInvincible;
+
+            PlaySound(hitSound);
+            StartCoroutine(FlashSprite(damageFlashColor));
+        }
+        else if (amount > 0)
+        {
+            PlaySound(healSound);
+            StartCoroutine(FlashSprite(healFlashColor));
         }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
@@ -102,6 +123,24 @@ public class PlayerController : MonoBehaviour
         if (projectile != null)
         {
             projectile.Launch(lookDirection, 300);
+            PlaySound(throwSound);
         }
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
+    private IEnumerator FlashSprite(Color flashColor)
+    {
+        if (spriteRenderer == null) yield break;
+
+        spriteRenderer.color = flashColor;
+        yield return new WaitForSeconds(flashDuration);
+        spriteRenderer.color = Color.white;
     }
 }
