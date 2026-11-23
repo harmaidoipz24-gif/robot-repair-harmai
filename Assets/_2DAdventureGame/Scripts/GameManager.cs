@@ -5,9 +5,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
 
-    [Header("Налаштування рівня")]
-    public int totalEnemies = 1; // Кількість роботів, яких треба відремонтувати
-
+    private int totalEnemies = 0;
     private int fixedEnemiesCount = 0;
     private bool isGameOver = false;
 
@@ -25,19 +23,18 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        totalEnemies = FindObjectsByType<EnemyController>(FindObjectsSortMode.None).Length;
         UpdateCounter();
     }
 
     private void Update()
     {
-        // Якщо гра завершена (перемога або поразка), натискання R перезавантажує сцену
         if (isGameOver && Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
-    // Викликається при кожному ремонті бота
     public void RobotFixed()
     {
         if (isGameOver) return;
@@ -51,7 +48,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Викликається при 0 HP гравця
     public void GameOver()
     {
         if (isGameOver) return;

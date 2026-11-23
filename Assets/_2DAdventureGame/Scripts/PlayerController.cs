@@ -4,15 +4,17 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 5.0f;
     public int maxHealth = 5;
+    public float timeInvincible = 1.5f;
     public GameObject projectilePrefab;
 
-    // Властивість читання HP для HealthCollectible
     public int health { get { return currentHealth; } }
 
     private Rigidbody2D rigidbody2d;
     private Vector2 move;
     private Vector2 lookDirection = new Vector2(1, 0);
     private int currentHealth;
+    private bool isInvincible;
+    private float damageCooldown;
 
     private void Start()
     {
@@ -29,6 +31,15 @@ public class PlayerController : MonoBehaviour
         {
             lookDirection.Set(move.x, move.y);
             lookDirection.Normalize();
+        }
+
+        if (isInvincible)
+        {
+            damageCooldown -= Time.deltaTime;
+            if (damageCooldown < 0)
+            {
+                isInvincible = false;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.C))
@@ -59,6 +70,13 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeHealth(int amount)
     {
+        if (amount < 0)
+        {
+            if (isInvincible) return;
+            isInvincible = true;
+            damageCooldown = timeInvincible;
+        }
+
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
 
         if (UIHandler.instance != null)

@@ -182,7 +182,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   speed: 1
   vertical: 0
-  changeTime: 3
+  changeTime: 1.5
 --- !u!95 &4930686131248866417
 Animator:
   serializedVersion: 7
