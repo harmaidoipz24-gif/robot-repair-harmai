@@ -74,4 +74,21 @@
 **Що робитиму далі:**
 ...
 
+### Етап 1: UI Toolkit & UI Builder
+* Зверстано інтерфейс у `GameUI.uxml` (`#CounterLabel`, `#WinScreenContainer`, `#LoseScreenContainer`).
+* У `UIHandler.cs` налаштовано пошук UXML-елементів через `root.Q<T>()` та керування їхньою видимістю (`DisplayStyle`).
+
+### Етап 2: GameManager & Логіка гри
+* Створено `GameManager.cs` (Singleton) для обробки умов перемоги (`fixedEnemies >= totalEnemies`) та поразки (`HP <= 0`).
+* Реалізовано перезавантаження рівня на клавішу **R** через `SceneManager.LoadScene()`.
+
+### Етап 3: Зв'язування скриптів та усунення помилок
+* **`EnemyController.cs`**: підключено виклик `RobotFixed()` у метод `Fix()`.
+* **`PlayerController.cs`**: додано виклик `GameOver()` при `HP <= 0` та властивість `health` (виправлено помилку CS1061).
+* **`UIHandler.cs`**: додано перевантажений метод `DisplayDialogue()` (виправлено CS7036).
+
+### Етап 4: Тестування (QA)
+* **Перемога**: Постріл (**C**)  ремонт робота  лічильник `Fixed: 1/1` $\rightarrow$ вікно перемоги.
+* **Поразка**: Втрата HP оновлення HealthBar  вікно поразки при 0 HP.
+* **Перезапуск**: Клавіша **R** під час фіналу  скидання сцени.
 
